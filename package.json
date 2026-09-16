@@ -6,7 +6,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "tsx --test test/*.test.ts",
@@ -27,7 +30,16 @@
     "@typescript-eslint/parser": "^7.0.0",
     "@typescript-eslint/eslint-plugin": "^8.67.0"
   },
-  "keywords": ["reflex", "vector-store", "llm-compiler", "quilt", "cells", "esp32", "edge", "agent"],
+  "keywords": [
+    "reflex",
+    "vector-store",
+    "llm-compiler",
+    "quilt",
+    "cells",
+    "esp32",
+    "edge",
+    "agent"
+  ],
   "engines": {
     "node": ">=18"
   }
