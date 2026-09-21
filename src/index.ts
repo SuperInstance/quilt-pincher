@@ -27,10 +27,12 @@ export { PincherEngine, HashEmbedder, DefaultVeto } from './core/engine.js';
 // Adapters
 export { MemoryReflexStore } from './adapters/memory-store.js';
 export { CloudflareAIEmbedder, OfflineEmbedder, QuiltAIEmbedder } from './adapters/embedding-adapter.js';
+export { ReflexArc } from './adapters/reflex-arc.js';
+export type { ReflexRecall, ReflexArcConfig } from './adapters/reflex-arc.js';
 
 // Quilt sheet (the engine as cells)
 export { PincherSheet, runPinch } from './cells/sheet.js';
-export type { PincherSheetConfig, PincherSheet, PincherCell } from './cells/sheet.js';
+export type { PincherSheetConfig, PincherCell } from './cells/sheet.js';
 
 // Platform adapters
 export { cloudSheet } from './platforms/cloud.js';
