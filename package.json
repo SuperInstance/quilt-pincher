@@ -16,14 +16,10 @@
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@quilt/core": "*",
-    "@quilt/sdk": "*",
-    "@quilt/ai": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^26.2.0",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
     "tsx": "^4.7.0",
     "vitest": "^4.1.10",
     "eslint": "^8.57.0",

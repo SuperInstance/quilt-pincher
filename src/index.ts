@@ -30,7 +30,7 @@ export { CloudflareAIEmbedder, OfflineEmbedder, QuiltAIEmbedder } from './adapte
 
 // Quilt sheet (the engine as cells)
 export { PincherSheet, runPinch } from './cells/sheet.js';
-export type { PincherSheetConfig, PincherSheet, PincherCell } from './cells/sheet.js';
+export type { PincherSheetConfig, PincherCell } from './cells/sheet.js';
 
 // Platform adapters
 export { cloudSheet } from './platforms/cloud.js';
