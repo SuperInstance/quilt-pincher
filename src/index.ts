@@ -28,6 +28,18 @@ export { PincherEngine, HashEmbedder, DefaultVeto } from './core/engine.js';
 export { MemoryReflexStore } from './adapters/memory-store.js';
 export { CloudflareAIEmbedder, OfflineEmbedder, QuiltAIEmbedder } from './adapters/embedding-adapter.js';
 
+// HDC / ExoJ binding layer (FB1 — fleet-seeds lode 2026-10-03 §4)
+export {
+  randomHV, bind, unbind, bundle, permute, permuteInverse, cosine, seedHash,
+} from './hdc/hypervector.js';
+export type { Hyper } from './hdc/hypervector.js';
+export { HDCEmbedder } from './hdc/hdc-embedder.js';
+export {
+  encodeField, condition, conditionEmbedding, levelHV,
+  ROLES, LEVELS, ZERO_FIELD,
+} from './hdc/exoj-field.js';
+export type { ExoJFieldState } from './hdc/exoj-field.js';
+
 // Quilt sheet (the engine as cells)
 export { PincherSheet, runPinch } from './cells/sheet.js';
 export type { PincherSheetConfig, PincherCell } from './cells/sheet.js';
