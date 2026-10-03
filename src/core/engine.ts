@@ -11,6 +11,7 @@
 import type {
   Pinch, PinchResult, PincherConfig, Reflex, Embedder, ReflexStore, Compiler, Veto,
 } from './types.js';
+import { conditionEmbedding, type ExoJFieldState } from '../hdc/exoj-field.js';
 
 export class PincherEngine {
   private embedder: Embedder;
@@ -37,15 +38,22 @@ export class PincherEngine {
     try {
       // 1. Embed the trigger
       const embedding = await this.embedder.embed(pinch.trigger);
+      // 1b. ExoJ seam: a pinch may carry a field state in context. When it
+      // does, the query embedding is bound with the field hypervector, so
+      // reflexes are retrieved FIELD-CONDITIONED (same trigger, different
+      // field → different reflex). No field → identity, no conditioning.
+      const query = pinch.context?.exojField
+        ? conditionEmbedding(embedding, pinch.context.exojField as ExoJFieldState)
+        : embedding;
 
       // 2. Match against the reflex database
-      const matches = await this.store.query(embedding, 5);
+      const matches = await this.store.query(query, 5);
       if (matches.length === 0 || matches[0]!.score < this.confirmThreshold) {
         // 3a. No match — compile a new reflex (SLOW tier)
         if (!this.compiler) {
           return { kind: 'error', error: 'No match and no compiler configured', latencyMs: Date.now() - t0 };
         }
-        return await this.compileAndStore(pinch, embedding, t0);
+        return await this.compileAndStore(pinch, query, t0);
       }
 
       const top = matches[0]!;
