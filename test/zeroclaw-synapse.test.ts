@@ -62,6 +62,8 @@ test('serve: exact trigger hits FAST tier and roundtrips the payload', async () 
   assert.equal(out.content, '# fixture delta\n\npincher serve roundtrip payload. not a real scouting delta.\n');
   assert.equal(out.output_sha256, '0e8b3322532e41a36ce1c0895b7bb74b1b8e4c89a52c8c1d05e0ff9dcd7e99f3');
   assert.equal(out.cites.length, 3);
+  assert.ok(result.latencyMs < 50, `FAST tier contract: ${result.latencyMs}ms`);
+});
 
 // 2b. origin_row rides the payload when the spec carries it (receipt back-pointer)
 test('serve: spec with origin_row serves it in the payload', async () => {
@@ -72,8 +74,6 @@ test('serve: spec with origin_row serves it in the payload', async () => {
   const { result, exitCode } = await serveOnce({ trigger: spec.trigger, specDir: dir });
   assert.equal(exitCode, 0);
   assert.equal((result as { kind: string; output: { origin_row?: string } }).output.origin_row, 'a9c357eca6160000');
-});
-  assert.ok(result.latencyMs < 50, `FAST tier contract: ${result.latencyMs}ms`);
 });
 
 test('serve: foreign trigger misses cleanly (exit 4), nothing learned or written', async () => {
