@@ -1,0 +1,59 @@
+# Publish — fail-closed, receipts-gated (quilt-c publish.yml pattern,
+# pollinated 2026-10-03).
+#
+# FALSIFIER: if the publish step fails with an auth error, the action item
+# is setting the NPM_TOKEN repository secret (fine-grained, expiring, scoped
+# to @quilt/pincher — ask the org owners). Do NOT fix it by committing any
+# long-lived token to this repo; that would rebuild the credential problem
+# this workflow exists to avoid. --provenance signs the tarball to this
+# workflow run via GitHub OIDC, so a published version is verifiably the
+# output of THIS file at THIS tag.
+#
+# Fail-closed by construction: tag-triggered only, and nothing publishes
+# unless spine + suite + build all pass first. A plain branch push must
+# never publish.
+name: publish-npm
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  SPINE_SHA256: 51b6d1e1261a99fa2306b95115f250bddb30a9a8506090858328e7c1eee99483
+
+jobs:
+  gate:
+    name: spine + suite + build before anything leaves
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - name: spine
+        run: npx tsx test/hdc-spine.mjs | grep -q "spine ${{ env.SPINE_SHA256 }} "
+      - run: npm install --save-dev typescript@^5.9.3
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  publish:
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm install --save-dev typescript@^5.9.3
+      - run: npm run build
+      - name: npm publish (provenance-signed)
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

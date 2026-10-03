@@ -1,22 +1,76 @@
+# CI — receipts-grade pipeline (pong-quilt merge-gate + quilt-c falsifier
+# culture, pollinated 2026-10-03).
+#
+# Gate order is deliberate:
+#   1. spine — the named canary. The whole HDC/ExoJ layer is string-seeded,
+#      so a fixed corpus must hash identically in every process forever.
+#      If this breaks, nondeterminism crept in (time, Math.random,
+#      iteration order) and the failure names THE SPINE, not the suite.
+#   2. suite — full pins across the node support matrix.
+#   3. build-and-pack — the package a consumer would actually install.
 name: CI
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+env:
+  # Pinned 2026-10-03 from two independent local processes. If a legitimate
+  # change alters embeddings (dimension, seed grammar, thermometer), update
+  # this pin IN THE SAME COMMIT as the change, and say so in the message.
+  SPINE_SHA256: 51b6d1e1261a99fa2306b95115f250bddb30a9a8506090858328e7c1eee99483
+
 jobs:
-  test:
+  spine:
+    name: hdc determinism spine (named canary)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm ci
-      - name: Install TypeScript 5.x (peer-compatible)
-        run: npm install --save-dev typescript@^5.9.3
-        # typescript 7.x peer-conflicts with @typescript-eslint/parser 8.70.1 (which peers >=4.8.4 <6.1.0)
-        # Pin to 5.x until upstream adds TS7 support.
+        with: { node-version: 22 }
+      - run: npm ci
+      - name: spine hash matches pin
+        run: |
+          OUT=$(npx tsx test/hdc-spine.mjs)
+          echo "$OUT"
+          echo "$OUT" | grep -q "spine ${{ env.SPINE_SHA256 }} " || {
+            echo "SPINE BREAK: got '$OUT', want '${{ env.SPINE_SHA256 }}' — nondeterminism or unpinned embedding change"
+            exit 1
+          }
+
+  suite:
+    name: full pin suite (node ${{ matrix.node }})
+    needs: spine
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ matrix.node }}' }
+      - run: npm ci
+      # typescript 7.x peer-conflicts with @typescript-eslint/parser 8.70.1
+      # (peers >=4.8.4 <6.1.0). Pin to 5.x until upstream adds TS7 support.
+      - run: npm install --save-dev typescript@^5.9.3
       - run: npm run typecheck
       - run: npm test
+
+  build-and-pack:
+    name: build + pack dry-run
+    needs: suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm install --save-dev typescript@^5.9.3
+      - run: npm run build
+      - name: dist is real
+        run: test -s dist/index.js && test -s dist/index.d.ts
+      - name: pack dry-run lists the entry points
+        run: npm pack --dry-run 2>&1 | tee pack.txt && grep -q 'dist/index.js' pack.txt && grep -q 'dist/index.d.ts' pack.txt
