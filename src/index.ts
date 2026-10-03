@@ -26,6 +26,8 @@ export { PincherEngine, HashEmbedder, DefaultVeto } from './core/engine.js';
 
 // Adapters
 export { MemoryReflexStore } from './adapters/memory-store.js';
+export { loadZeroclawSpecs, parseZeroclawSpec } from './adapters/zeroclaw-spec.js';
+export type { ZeroclawSpec } from './adapters/zeroclaw-spec.js';
 export { CloudflareAIEmbedder, OfflineEmbedder, QuiltAIEmbedder } from './adapters/embedding-adapter.js';
 
 // HDC / ExoJ binding layer (FB1 — fleet-seeds lode 2026-10-03 §4)

@@ -1,0 +1,20 @@
+{
+  "$schema": "zeroclaw-reflex-spec/v1",
+  "id": "zc-deadbeefcafe0001",
+  "intent": "zeroclaw order: fleet-seeds-last3-scout-delta (pin fixture)",
+  "trigger": "order:fleet-seeds-last3-scout-delta\nread the 3 most recent scout reports and file a delta\ncontext-sha256:face0000000000000000000000000000000000000000000000000000000000babe",
+  "context_sha256": "face0000000000000000000000000000000000000000000000000000000000babe",
+  "model": "MiniMax-M2.7",
+  "payload": {
+    "delta_path": "scouts/2026-10-03-fixture-delta.md",
+    "output_sha256": "0e8b3322532e41a36ce1c0895b7bb74b1b8e4c89a52c8c1d05e0ff9dcd7e99f3",
+    "content": "# fixture delta\n\npincher serve roundtrip payload. not a real scouting delta.\n",
+    "bytes": 76
+  },
+  "cites": [
+    "git:e9363fa49548c12239da58745120e4fb59b61250",
+    "tip:b92d3cd2e735e8f5fdad0c008446a93667aa4ee0c0a06c4bcb2a3e2bccf5f572",
+    "row:3d0e52b8b056327d"
+  ],
+  "provenance": { "compiledBy": "zeroclaw", "parentOrder": "fleet-seeds-last3-scout-delta" }
+}
