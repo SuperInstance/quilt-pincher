@@ -14,6 +14,11 @@
  *
  * Honest limits: amplitudes outside [0,1] are clamped; the thermometer is
  * linear in amplitude, not in any physical law of the ExoJ model.
+ *
+ * Canonical source: SuperInstance/exoj README field law (γ/η/Δ, Σγ+η≤1),
+ * pinned at bfbe4614b5e26478c79068a89a5e5a54758d9dd7 — see
+ * docs/EXOJ-PROVENANCE.md. ι is a fleet-seeds lode §4 derivative, not
+ * charter; drift policy lives in that doc.
  */
 import { randomHV, bind, bundle, type Hyper } from './hypervector.js';
 
