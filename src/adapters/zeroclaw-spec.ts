@@ -32,6 +32,8 @@ export interface ZeroclawSpec {
     content: string;
     bytes: number;
   };
+  /** Receipt back-pointer: the zeroclaw journal row that earned this reflex. */
+  origin_row?: string;
   cites: string[];
   provenance: { compiledBy: string; parentOrder?: string };
 }
@@ -66,7 +68,10 @@ export async function loadZeroclawSpecs(
   const out: Reflex[] = [];
   for (const spec of listZeroclawSpecs(dir)) {
     if (eligible && !eligible(spec)) continue;
-    const payload = { ...spec.payload, cites: spec.cites, model: spec.model };
+    const payload = {
+      ...spec.payload, cites: spec.cites, model: spec.model,
+      ...(spec.origin_row ? { origin_row: spec.origin_row } : {}),
+    };
     out.push({
       id: spec.id,
       embedding: await embedder.embed(spec.trigger),
