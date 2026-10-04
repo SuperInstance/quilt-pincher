@@ -58,6 +58,11 @@ jobs:
       - run: npm install --save-dev typescript@^5.9.3
       - run: npm run typecheck
       - run: npm test
+        # test/provenance.test.ts shells out to `gh api` to prove the pinned
+        # SuperInstance/exoj commit resolves. gh refuses to run inside Actions
+        # without GH_TOKEN (the repo is public, so read-scope is enough).
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   build-and-pack:
     name: build + pack dry-run
