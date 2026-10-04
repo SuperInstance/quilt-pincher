@@ -39,6 +39,9 @@ jobs:
       - run: npm install --save-dev typescript@^5.9.3
       - run: npm run typecheck
       - run: npm test
+        # Same provenance pin as ci.yml's suite job — gh needs GH_TOKEN in Actions.
+        env:
+          GH_TOKEN: ${{ github.token }}
       - run: npm run build
 
   publish:
