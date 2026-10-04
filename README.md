@@ -135,3 +135,19 @@ You can ship a `.nail` to an ESP32 and the reflexes are immediately available of
 ## ✦ License
 
 Apache 2.0. See [LICENSE](./LICENSE).
+
+## Documentation
+
+Wave-69 full-knowledge documentation package (task 69-doc-d) — routes by audience:
+
+- **New agent, zero context** → [docs/ONBOARDING.md](docs/ONBOARDING.md) — identity, verify-it-works commands (incl. the spine canary), reading order, gotchas (stubs, eval disclosure), open frontier.
+- **End users** (serve zeroclaw reflexes, embed the engine) → [docs/USER-GUIDE.md](docs/USER-GUIDE.md) — first success in 5 minutes, the serve exit-code contract, ledger usage, troubleshooting table, FAQ.
+- **Developers extending the code** → [docs/DEVELOPER-GUIDE.md](docs/DEVELOPER-GUIDE.md) — code layout, core concepts as the code names them, how to add embedders/tiers/persistence, testing, editor gotchas (spine re-pinning law).
+- **Engineers operating/reviewing** → [docs/ENGINEERING-NOTES.md](docs/ENGINEERING-NOTES.md) — architecture diagram, invariants, failure modes & blast radius (incl. the unsandboxed-eval truth), measured latency, CI/publish operations, design decisions.
+- **Executives** → [docs/CTO-BRIEF.md](docs/CTO-BRIEF.md) — value statement, maturity (prototype+, kernel working), risks/mitigations, $0 cost profile, strategic options, integration surface.
+- **Index of all deeper knowledge** → [docs/KNOWLEDGE-MAP.md](docs/KNOWLEDGE-MAP.md) — repo map, pre-existing docs, fleet relationships (zeroclaw, fleet-seeds, Quilt family), journal task IDs, receipts of record, search recipes.
+
+Truth note appended with the package: the quick start above imports `@quilt/core`,
+which is not a dependency of this repo; the runnable surface today is
+`src/` standalone (`PincherSheet`/`PincherEngine`, the `serve` CLI) — see
+docs/ONBOARDING.md for the verified commands.
